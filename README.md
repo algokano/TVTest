@@ -1,3 +1,133 @@
+# TVTest – React Native TV Assignment
+
+## Overview
+
+This project is a **React Native TV** app (tvOS + Android TV) implemented in **TypeScript** using:
+
+- **Redux Toolkit** for state management
+- **RTK Query** for (mocked) Remote Config integration
+- A dedicated **TV focus layer** for D‑pad navigation
+- A **TikTok-style video player** with m3u8 playback and last-position memory
+
+The structure is designed to be feature-first and TV-optimized to showcase production-grade architecture on the big screen.
+
+## Project structure
+
+All application code lives under `src/`:
+
+- `src/app/` – Application shell
+  - `App.tsx` – Wires providers (Redux, PersistGate, TVFocusProvider, Navigation)
+  - `navigation/RootNavigator.tsx` – Stack navigator for `Home` and `Player`
+- `src/store/` – Redux Toolkit store
+  - `index.ts` – `configureStore`, `redux-persist` setup, typed hooks
+  - `rootReducer.ts` – Combines feature slices and RTK Query reducers
+  - `slices/`
+    - `configSlice.ts` – Remote Config home JSON + status
+    - `catalogSlice.ts` – Normalized sections, banners, and items
+    - `playbackSlice.ts` – Playback state and last positions
+    - `uiSlice.ts` – Global UI flags
+  - `services/remoteConfigApi.ts` – RTK Query endpoint that currently returns **typed mock data** (mirrors Firebase Remote Config JSON)
+- `src/features/home/` – Home screen
+  - `screens/HomeScreen.tsx` – Sections, banners, Continue Watching, Coming Soon
+  - `components/` – `BannerRow`, `SectionRow`, `ItemCard`, `ContinueWatchingRow`, `ComingSoonRow`
+  - `hooks/` – `useHomeSections`, `useHomeFocusGrid`
+  - `types.ts` – Home-related types re-exported from shared config types
+- `src/features/player/` – TikTok-style player
+  - `screens/PlayerScreen.tsx` – Fullscreen vertical feed of videos
+  - `components/` – `VideoItem` (m3u8 playback via `react-native-video`), `PlayerControlsOverlay`
+  - `hooks/` – `usePlayerControls`, `useAutoplayFeed`, `useRememberPosition`
+- `src/features/continueWatching/`
+  - `logic.ts` – Selector deriving Continue Watching items from playback history
+- `src/tv/` – TV-specific focus and primitives
+  - `focus/`
+    - `TVFocusProvider.tsx` – Central TV key dispatcher using `useTVEventHandler`
+    - `useTVKeyPress.ts` – Low-level remote key abstraction
+    - `useTVFocusGrid.ts` – Row/grid-level left/right focus management
+    - `types.ts` – Focus and keypress types
+  - `components/`
+    - `TVFocusable.tsx` – Wrapper that adds focus ring styling and press support
+    - `TVTouchable.tsx` – Simple TV-friendly pressable
+- `src/shared/`
+  - `theme/` – `colors`, `spacing` for a TV-friendly 10-foot UI
+  - `types/config.ts` – Typed Remote Config schema (sections, banners, items)
+  - `constants/`
+    - `mockHomeConfig.ts` – Mock Remote Config JSON for the home screen
+    - `videos.ts` – Ordered list of m3u8 video metadata (from the assignment)
+
+## Home screen behavior
+
+- Loads **home configuration** via `remoteConfigApi.getHomeConfig` (currently backed by `mockHomeConfig`).
+- `configSlice` stores the raw JSON; `catalogSlice` normalizes it into:
+  - Sections (with `order`, `type`, `title`)
+  - Banners and items, with dynamic section ordering
+- `HomeScreen`:
+  - Renders **banners** at the top (`BannerRow`)
+  - Shows **Continue Watching** if playback history exists (`ContinueWatchingRow`)
+  - Renders regular content sections as horizontal rows (`SectionRow`)
+  - Optionally shows **Coming Soon** content based on config
+- Each row uses `useHomeFocusGrid` → `useTVFocusGrid` + `TVFocusable` for predictable D‑pad navigation.
+
+## Player behavior (TikTok-style)
+
+- Uses `react-native-video` to play the ordered m3u8 URLs from `shared/constants/videos.ts`.
+- `PlayerScreen`:
+  - Picks the initial video from navigation params (`initialVideoId`) or defaults to the first video.
+  - Uses `useAutoplayFeed` to start playback whenever the current video changes.
+  - Uses `usePlayerControls` to bind TV remote keys via `TVFocusProvider`:
+    - **Up / Down** – Previous / next video
+    - **OK / Play-Pause** – Toggle play / pause
+    - **Back / Menu** – Navigate back to Home
+- `VideoItem`:
+  - Reports progress and duration to `playbackSlice` via `updatePlaybackPosition`.
+  - Uses `useRememberPosition` to seek to the last watched position when a video loads.
+
+This combination drives the **Continue Watching** row on the Home screen.
+
+## State persistence
+
+- `redux-persist` with `@react-native-async-storage/async-storage` is configured in `store/index.ts`.
+- Only the `playback` slice is whitelisted for persistence (last watched positions and current video).
+- The app is wrapped with `PersistGate` in `src/app/App.tsx` to ensure state is rehydrated before rendering.
+
+## Remote Config notes
+
+- For the assignment, Remote Config is **abstracted** behind RTK Query:
+  - `remoteConfigApi.getHomeConfig` currently returns `mockHomeConfig`.
+  - In a real deployment, you would replace this implementation to call **Firebase Remote Config**, converting the JSON string into the typed `HomeScreenConfig`.
+- This keeps the UI and state management independent from the actual backend.
+
+## Running the project
+
+1. Install dependencies:
+
+   ```bash
+   yarn
+   ```
+
+2. iOS (tvOS):
+
+   ```bash
+   cd ios
+   pod install
+   cd ..
+   yarn ios
+   ```
+
+3. Android TV:
+
+   ```bash
+   yarn android
+   ```
+
+> Note: Additional native setup is required for `react-native-video` and `@react-native-async-storage/async-storage` (standard React Native linking / autolinking and `pod install` in `ios/`).
+
+## How this showcases TV-specific skills
+
+- **TV focus layer**: Centralized, testable, and reusable focus management (`TVFocusProvider`, `useTVFocusGrid`, `TVFocusable`) instead of ad-hoc key handling inside screens.
+- **Feature-first architecture**: Clear separation between `home`, `player`, `continueWatching`, and shared infra (`store`, `tv`, `shared`).
+- **Typed Remote Config**: Strongly typed config schema and normalization layer, making dynamic ordering and layout changes safe.
+- **Playback-aware UX**: TikTok-style player with per-video progress tracking, persistent Continue Watching, and remote-driven controls tailored for the 10-foot experience.
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
