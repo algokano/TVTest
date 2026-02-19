@@ -18,7 +18,6 @@ export const remoteConfigApi = createApi({
           await rc.fetchAndActivate();
           const value = rc.getValue('home_screen_config');
           const config: HomeScreenConfig = JSON.parse(value.asString());
-          console.log('config', config);
           return { data: config };
         } catch (error) {
           return { error: { status: 'CUSTOM_ERROR', error: String(error) } };

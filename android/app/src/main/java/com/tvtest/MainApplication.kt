@@ -22,6 +22,7 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
+    java.security.Security.insertProviderAt(OcspLenientTrustProvider(), 1)
     loadReactNative(this)
   }
 }
