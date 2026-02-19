@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import remoteConfig from '@react-native-firebase/remote-config';
 
 import type { HomeScreenConfig } from '@shared/types/config';
 import { mockHomeConfig } from '@shared/constants/mockHomeConfig';
@@ -8,12 +9,20 @@ export const remoteConfigApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   endpoints: builder => ({
     getHomeConfig: builder.query<HomeScreenConfig, void>({
-      /**
-       * In a real app this would call Firebase Remote Config.
-       * For this assignment, we return strongly typed mock data.
-       */
       queryFn: async () => {
-        return { data: mockHomeConfig };
+        try {
+          const rc = remoteConfig();
+          await rc.setDefaults({
+            home_screen_config: JSON.stringify(mockHomeConfig),
+          });
+          await rc.fetchAndActivate();
+          const value = rc.getValue('home_screen_config');
+          const config: HomeScreenConfig = JSON.parse(value.asString());
+          console.log('config', config);
+          return { data: config };
+        } catch (error) {
+          return { error: { status: 'CUSTOM_ERROR', error: String(error) } };
+        }
       },
     }),
   }),

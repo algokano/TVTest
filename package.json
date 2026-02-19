@@ -10,19 +10,23 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-firebase/app": "^23.8.6",
+    "@react-native-firebase/remote-config": "^23.8.6",
+    "@react-native/new-app-screen": "0.83.0",
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/native-stack": "^7.2.0",
     "@reduxjs/toolkit": "^2.5.0",
     "react": "19.2.0",
     "react-native": "npm:react-native-tvos@0.83.0-0",
-    "@react-native/new-app-screen": "0.83.0",
     "react-native-gesture-handler": "^2.23.0",
-    "react-native-reanimated": "^3.16.8",
+    "react-native-reanimated": "^4.2.2",
+    "react-native-worklets": "^0.7.0",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-screens": "^4.4.0",
+    "react-native-svg": "^15.15.3",
     "react-native-video": "^6.4.0",
     "react-redux": "^9.2.0",
-    "@react-native-async-storage/async-storage": "^1.23.1",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
@@ -39,12 +43,12 @@
     "@types/jest": "^29.5.13",
     "@types/react": "^19.2.0",
     "@types/react-test-renderer": "^19.1.0",
+    "babel-plugin-module-resolver": "^5.0.0",
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
     "react-test-renderer": "19.2.0",
-    "typescript": "^5.8.3",
-    "babel-plugin-module-resolver": "^5.0.0"
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">=20"

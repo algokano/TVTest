@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '@shared/theme';
+import { colors, spacing, s } from '@shared/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,26 +19,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.textPrimary,
-    fontSize: 20,
-  },
-
-  breadcrumbText: {
-    color: colors.textSecondary,
-    marginBottom: spacing.sm,
-    fontSize: 16,
-    paddingHorizontal: spacing.lg,
+    fontSize: s(20),
   },
 
   heroWrapper: {
     paddingHorizontal: spacing.lg,
-    marginBottom: spacing.xl,
     overflow: 'hidden',
-  },
-  heroWrapperCollapsed: {
-    height: 0,
-    marginBottom: 0,
-    paddingVertical: 0,
-    opacity: 0,
   },
 
   heroContainer: {
@@ -46,7 +32,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   heroTextColumn: {
-    flex: 1,
+    flex: 0.52,
+    minHeight: s(380),
     marginRight: spacing.xl,
     paddingTop: spacing.sm,
   },
@@ -56,42 +43,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.md,
   },
-  brandHeart: {
-    color: colors.primary,
-    fontSize: 32,
-    marginRight: spacing.sm,
-  },
-  brandName: {
-    color: colors.textPrimary,
-    fontSize: 32,
-    fontWeight: '800',
-    fontStyle: 'italic',
-  },
 
   heroTitle: {
     color: colors.textPrimary,
-    fontSize: 36,
+    fontSize: s(32),
     fontWeight: '700',
     marginBottom: spacing.sm,
-    lineHeight: 44,
+    lineHeight: s(44),
   },
   heroDescription: {
     color: colors.textSecondary,
-    fontSize: 18,
-    lineHeight: 28,
+    fontSize: s(24),
+    lineHeight: s(36),
     marginTop: spacing.md,
   },
-
-  heroPosterContainer: {
-    width: 420,
-    height: 580,
-    borderRadius: 20,
-    overflow: 'hidden',
-    backgroundColor: colors.backgroundElevated,
-  },
   heroPoster: {
-    width: '100%',
-    height: '100%',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: s(900),
+    height: s(580),
   },
 });
 

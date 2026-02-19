@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Dimensions, FlatList, Text, View } from 'react-native';
+import { Dimensions, FlatList, Text, View, ViewStyle } from 'react-native';
 
 import type {
   NormalizedItem,
@@ -34,6 +34,8 @@ export const SectionRow: React.FC<SectionRowProps> = ({
 
   const listContentStyle = useMemo(
     () => ({
+      gap: spacing.md,
+      alignItems: 'center',
       paddingLeft: spacing.lg,
       paddingRight: Math.max(
         spacing.lg,
@@ -93,7 +95,7 @@ export const SectionRow: React.FC<SectionRowProps> = ({
           data={items}
           keyExtractor={item => item.id}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={listContentStyle}
+          contentContainerStyle={listContentStyle as ViewStyle}
           extraData={focusGrid.isRowActive ? focusGrid.focusedIndex : -1}
           getItemLayout={(_, index) => ({
             length: ITEM_STRIDE,
@@ -105,18 +107,13 @@ export const SectionRow: React.FC<SectionRowProps> = ({
 
             return (
               <ItemCard
-                item={item}
+                data={item}
                 focusProps={focusProps}
                 onPress={() => onItemPress?.(item)}
-                showFocusBorder={false}
               />
             );
           }}
         />
-
-        {focusGrid.isRowActive && (
-          <View style={styles.focusOverlay} pointerEvents="none" />
-        )}
       </View>
     </View>
   );

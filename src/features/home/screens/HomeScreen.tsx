@@ -5,8 +5,21 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  type LayoutChangeEvent,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Animated, {
+  Easing,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { useHomeSections } from '../hooks/useHomeSections';
 import { SectionRow } from '../components/SectionRow';
@@ -19,10 +32,12 @@ import {
 } from '@app/navigation/RootNavigator';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { selectContinueWatchingItems } from '@features/continueWatching/logic';
-import { colors } from '@shared/theme';
+import { colors, spacing } from '@shared/theme';
+import { BrandLogo } from '@shared/icons';
 import type { NormalizedItem } from '@store/slices/catalogSlice';
 import { useTVFocusContext } from '@tv/focus/TVFocusProvider';
 import styles from './HomeScreen.styles';
+import { images } from '@shared/images';
 
 interface HeroContent {
   id: string;
@@ -47,6 +62,42 @@ export const HomeScreen: React.FC = () => {
 
   const [heroContent, setHeroContent] = useState<HeroContent | null>(null);
   const heroCollapsed = activeRowIndex > 0;
+
+  const collapseProgress = useSharedValue(0);
+  const heroContentHeight = useSharedValue(400);
+
+  const COLLAPSE_TIMING = useMemo(
+    () => ({ duration: 300, easing: Easing.out(Easing.cubic) }),
+    [],
+  );
+
+  useEffect(() => {
+    collapseProgress.value = withTiming(heroCollapsed ? 1 : 0, COLLAPSE_TIMING);
+  }, [heroCollapsed, collapseProgress, COLLAPSE_TIMING]);
+
+  const heroWrapperAnimStyle = useAnimatedStyle(() => ({
+    height: interpolate(
+      collapseProgress.value,
+      [0, 1],
+      [heroContentHeight.value, 0],
+    ),
+    marginBottom: interpolate(collapseProgress.value, [0, 1], [spacing.xl, 0]),
+    opacity: interpolate(collapseProgress.value, [0, 1], [1, 0]),
+  }));
+
+  const heroPosterAnimStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(collapseProgress.value, [0, 1], [1, 0]),
+  }));
+
+  const handleHeroLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      const h = e.nativeEvent.layout.height;
+      if (h > 0) {
+        heroContentHeight.value = h;
+      }
+    },
+    [heroContentHeight],
+  );
 
   const regularSections = useMemo(
     () => sections.filter(s => s.type === 'regular' || s.type === 'banner'),
@@ -156,25 +207,24 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      {heroImageUri ? (
+        <Animated.Image
+          source={images.mockPoster}
+          style={[styles.heroPoster, heroPosterAnimStyle]}
+          resizeMode={'cover'}
+        />
+      ) : null}
       <ScrollView
         ref={scrollViewRef}
         scrollEnabled={false}
         contentContainerStyle={styles.scrollContent}
       >
-        <Text style={styles.breadcrumbText}>Main page</Text>
-
-        <View
-          style={[
-            styles.heroWrapper,
-            heroCollapsed && styles.heroWrapperCollapsed,
-          ]}
-        >
+        <Animated.View style={[styles.heroWrapper, heroWrapperAnimStyle]}>
           {heroContent && (
-            <View style={styles.heroContainer}>
+            <View style={styles.heroContainer} onLayout={handleHeroLayout}>
               <View style={styles.heroTextColumn}>
                 <View style={styles.brandRow}>
-                  <Text style={styles.brandHeart}>❤️</Text>
-                  <Text style={styles.brandName}>My Drama</Text>
+                  <BrandLogo />
                 </View>
                 <Text style={styles.heroTitle} numberOfLines={2}>
                   {heroTitleLine}
@@ -185,18 +235,9 @@ export const HomeScreen: React.FC = () => {
                   </Text>
                 ) : null}
               </View>
-              {heroImageUri ? (
-                <View style={styles.heroPosterContainer}>
-                  <Image
-                    source={{ uri: heroImageUri }}
-                    style={styles.heroPoster}
-                    resizeMode="cover"
-                  />
-                </View>
-              ) : null}
             </View>
           )}
-        </View>
+        </Animated.View>
 
         {regularSectionsWithData.map(({ section, items }, index) => (
           <View

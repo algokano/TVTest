@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '@shared/theme';
+import { colors, spacing, s } from '@shared/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.lg,
     marginBottom: spacing.xs,
     color: colors.textSecondary,
-    fontSize: 16,
+    fontSize: s(16),
     fontWeight: '500',
   },
 });

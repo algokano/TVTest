@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { TVEventControl } from 'react-native';
 
 import { useTVFocusContext } from '@tv/focus/TVFocusProvider';
 
@@ -13,6 +14,13 @@ interface UsePlayerControlsOptions {
 
 export const usePlayerControls = (options: UsePlayerControlsOptions) => {
   const { setOverrideHandlers } = useTVFocusContext();
+
+  useEffect(() => {
+    TVEventControl.enableTVMenuKey();
+    return () => {
+      TVEventControl.disableTVMenuKey();
+    };
+  }, []);
 
   useEffect(() => {
     setOverrideHandlers({

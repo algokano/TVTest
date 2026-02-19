@@ -20,6 +20,10 @@ const mapEventTypeToKey = (eventType: string): TVControlKey | null => {
 
 export const useTVKeyPress = (handlers: TVKeyPressHandlers) => {
   useTVEventHandler(evt => {
+    if (evt.eventKeyAction !== undefined && evt.eventKeyAction !== 1) {
+      return;
+    }
+
     const key = mapEventTypeToKey(evt.eventType);
     if (!key) {
       return;

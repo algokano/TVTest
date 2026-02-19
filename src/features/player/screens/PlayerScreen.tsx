@@ -78,7 +78,11 @@ export const PlayerScreen: React.FC = () => {
     onPrevious: handlePrevious,
     onNext: handleNext,
     onTogglePlay: handleTogglePlay,
-    onBack: () => navigation.goBack(),
+    onBack: () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+      }
+    },
   });
 
   return (

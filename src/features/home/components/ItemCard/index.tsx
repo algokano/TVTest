@@ -7,46 +7,50 @@ import { TVFocusable } from '@tv/components/TVFocusable';
 import styles from './styles';
 
 interface ItemCardProps {
-  item: HomeItemConfig;
+  data: HomeItemConfig;
   focusProps?: FocusableItemProps;
   onPress?: () => void;
-  /** When false the card never renders its own focus border/scale. */
-  showFocusBorder?: boolean;
 }
 
 export const ItemCard: React.FC<ItemCardProps> = ({
-  item,
+  data,
   focusProps,
   onPress,
-  showFocusBorder = true,
 }) => {
-  const imageUri = item.posterUrl || item.thumbnailUrl;
+  const imageUri = data.posterUrl || data.thumbnailUrl;
 
   return (
     <TVFocusable
       focusProps={focusProps}
       onPress={onPress}
       style={styles.card}
-      focusedStyle={showFocusBorder ? styles.cardFocused : undefined}
+      focusedStyle={styles.cardFocused}
     >
       <View style={styles.posterContainer}>
-        <Image source={{ uri: imageUri }} style={styles.poster} />
-        {item.badge && (
+        <Image
+          source={{
+            uri: imageUri,
+          }}
+          style={styles.poster}
+          resizeMode={'cover'}
+        />
+
+        {data.badge && (
           <View
             style={[
               styles.badgeContainer,
-              item.badge === 'top' ? styles.badgeTop : styles.badgeNew,
+              data.badge === 'top' ? styles.badgeTop : styles.badgeNew,
             ]}
           >
             <Text style={styles.badgeText}>
-              {item.badge === 'top' ? 'TOP' : 'NEW'}
+              {data.badge === 'top' ? 'TOP' : 'NEW'}
             </Text>
           </View>
         )}
       </View>
-      <Text style={styles.title} numberOfLines={1}>
-        {item.title}
-      </Text>
+      {/* <Text style={styles.title} numberOfLines={1}>
+        {data.title}
+      </Text> */}
     </TVFocusable>
   );
 };

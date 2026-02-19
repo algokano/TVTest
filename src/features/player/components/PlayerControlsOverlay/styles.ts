@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '@shared/theme';
+import { colors, spacing, s } from '@shared/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,17 +10,17 @@ const styles = StyleSheet.create({
     right: spacing.lg,
     padding: spacing.lg,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 16,
+    borderRadius: s(16),
   },
   title: {
     color: colors.textPrimary,
-    fontSize: 22,
+    fontSize: s(22),
     fontWeight: '700',
     marginBottom: spacing.sm,
   },
   helper: {
     color: colors.textSecondary,
-    fontSize: 16,
+    fontSize: s(16),
   },
 });
 

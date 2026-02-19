@@ -1,7 +1,9 @@
+import { s } from './scale';
+
 export const spacing = {
-  xs: 4,
-  sm: 8,
-  md: 20,
-  lg: 48,
-  xl: 56,
+  xs: s(4),
+  sm: s(8),
+  md: s(20),
+  lg: s(48),
+  xl: s(56),
 };

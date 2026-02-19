@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "348698330509",
+    "project_id": "mydramatv-8c657",
+    "storage_bucket": "mydramatv-8c657.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348698330509:android:fc9222aa43999f11c3a9c4",
+        "android_client_info": {
+          "package_name": "com.tvtest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4_lWjXzwWOqxnG7k-JIFX0zLmR-Ozcto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
