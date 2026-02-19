@@ -4,6 +4,12 @@ A React Native TV app for **tvOS** and **Android TV** built with TypeScript and 
 
 The app has a Home screen with dynamic sections loaded from Firebase Remote Config and a TikTok-style video player with HLS (m3u8) playback.
 
+<img width="1280" height="728" alt="image" src="https://github.com/user-attachments/assets/27e1653d-c4e7-4932-8dbe-33f7050c8284" />
+
+<img width="1280" height="719" alt="image" src="https://github.com/user-attachments/assets/47ff5184-7407-4ac5-b29d-5997cd03a27d" />
+
+
+
 
 ## Features
 
